@@ -11,11 +11,13 @@ function setupResponsiveCanvas(canvas) {
     const baseHeight = 640;
     const aspect = baseHeight / baseWidth;
 
-    const availableWidth = Math.min(window.innerWidth, baseWidth);
-    const reservedForUI = 110; // запас под нижние кнопки и отступы
-    const availableHeight = Math.max(320, window.innerHeight - reservedForUI);
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
 
-    let targetHeight = availableHeight;
+    const availableWidth = Math.min(vw, baseWidth);
+    const maxCanvasHeight = Math.max(320, Math.min(baseHeight, vh * 0.8)); // ~80% высоты телефона
+
+    let targetHeight = maxCanvasHeight;
     let targetWidth = Math.round(targetHeight / aspect);
 
     if (targetWidth > availableWidth) {
