@@ -29,6 +29,7 @@ export class Game {
     }
 
     setupInput() {
+        // Клавиатура
         document.addEventListener('keydown', (e) => {
             if (!this.piece || this.gameOver) return;
 
@@ -48,6 +49,29 @@ export class Game {
                     break;
             }
         });
+
+        // Сенсорные / экранные кнопки
+        const bindControl = (selector, handler) => {
+            const el = document.querySelector(selector);
+            if (!el) return;
+
+            const onPress = (event) => {
+                event.preventDefault();
+                if (!this.piece || this.gameOver) return;
+                handler();
+            };
+
+            // pointerdown работает и с мышью, и с тачем
+            el.addEventListener('pointerdown', onPress);
+        };
+
+        bindControl('[data-action="left"]', () => this.movePiece(0, -1));
+        bindControl('[data-action="right"]', () => this.movePiece(0, 1));
+        bindControl('[data-action="down"]', () => {
+            this.movePiece(1, 0);
+            this.dropCounter = 0;
+        });
+        bindControl('[data-action="rotate"]', () => this.rotatePiece());
     }
 
     spawnPiece() {
