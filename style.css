@@ -162,7 +162,6 @@ h1 {
         width: 100%;
         max-width: 480px;
         margin: 0 auto;
-        padding-bottom: 72px; /* место под нижние кнопки */
         box-sizing: border-box;
     }
 
@@ -177,6 +176,10 @@ h1 {
     }
 
     #touch-controls {
+        position: fixed;
+        left: 50%;
+        bottom: 12px;
+        transform: translateX(-50%);
         display: flex;
     }
 }
