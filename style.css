@@ -9,6 +9,7 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent; /* убираем подсветку при тапе на Android */
 }
 
 #layout {
@@ -90,6 +91,10 @@ h1 {
     text-align: center;
     cursor: pointer;
     touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #game-buttons button:active {
@@ -119,6 +124,10 @@ h1 {
     cursor: pointer;
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
     touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #touch-controls button:active {
