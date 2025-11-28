@@ -11,27 +11,22 @@
 <body>
     <div id="layout">
         <div id="game-container">
-            <canvas id="game-canvas" width="480" height="640"></canvas>
-        </div>
-        <div id="ui-panel">
-            <h1>Треугольный<br>Тетрис</h1>
             <div id="score">Счет: 0</div>
-            <div id="controls">
-                <p><strong>Клавиатура</strong></p>
-                <p>⬅️ ➡️ : Движение</p>
-                <p>⬇️ : Ускорение</p>
-                <p>⬆️ : Поворот</p>
-
-                <div id="touch-controls">
-                    <button type="button" data-action="left" aria-label="Влево">⬅️</button>
-                    <div class="vertical-buttons">
-                        <button type="button" data-action="rotate" aria-label="Поворот">⟳</button>
-                        <button type="button" data-action="down" aria-label="Вниз">⬇️</button>
-                    </div>
-                    <button type="button" data-action="right" aria-label="Вправо">➡️</button>
+            <div id="game-buttons">
+                <button type="button" id="pause-btn" aria-label="Пауза">⏸</button>
+                <button type="button" id="restart-btn" aria-label="Новая игра">⟲</button>
+            </div>
+            <canvas id="game-canvas" width="480" height="640"></canvas>
+            <div id="touch-controls">
+                <button type="button" data-action="left" aria-label="Влево">⬅️</button>
+                <div class="vertical-buttons">
+                    <button type="button" data-action="rotate" aria-label="Поворот">⟳</button>
+                    <button type="button" data-action="down" aria-label="Вниз">⬇️</button>
                 </div>
+                <button type="button" data-action="right" aria-label="Вправо">➡️</button>
             </div>
         </div>
+        <div id="ui-panel"></div>
     </div>
     <script type="module" src="main.js"></script>
 </body>

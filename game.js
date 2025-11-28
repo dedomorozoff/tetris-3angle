@@ -21,6 +21,7 @@ export class Game {
         this.dropCounter = 0;
         this.score = 0;
         this.gameOver = false;
+        this.paused = false;
 
         this.spawnPiece();
         this.setupInput();
@@ -47,10 +48,18 @@ export class Game {
                 case 'ArrowUp':
                     this.rotatePiece();
                     break;
+                case ' ':
+                case 'Spacebar':
+                    this.togglePause();
+                    break;
+                case 'r':
+                case 'R':
+                    this.resetGame();
+                    break;
             }
         });
 
-        // Сенсорные / экранные кнопки
+        // Сенсорные / экранные кнопки / мышь
         const bindControl = (selector, handler) => {
             const el = document.querySelector(selector);
             if (!el) return;
@@ -72,6 +81,22 @@ export class Game {
             this.dropCounter = 0;
         });
         bindControl('[data-action="rotate"]', () => this.rotatePiece());
+
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            pauseBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                this.togglePause();
+            });
+        }
+
+        const restartBtn = document.getElementById('restart-btn');
+        if (restartBtn) {
+            restartBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                this.resetGame();
+            });
+        }
     }
 
     spawnPiece() {
@@ -123,7 +148,7 @@ export class Game {
     }
 
     update(deltaTime) {
-        if (this.gameOver) return;
+        if (this.gameOver || this.paused) return;
 
         this.dropCounter += deltaTime;
         if (this.dropCounter > this.dropInterval) {
@@ -166,13 +191,41 @@ export class Game {
             this.piece.draw(this.ctx, this.grid);
         }
 
-        if (this.gameOver) {
+        if (this.gameOver || this.paused) {
             this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             this.ctx.fillRect(0, 0, this.width, this.height);
             this.ctx.fillStyle = '#fff';
-            this.ctx.font = '40px Arial';
+            this.ctx.font = '32px Arial';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText('GAME OVER', this.width / 2, this.height / 2);
+            const text = this.gameOver ? 'GAME OVER' : 'PAUSED';
+            this.ctx.fillText(text, this.width / 2, this.height / 2);
         }
+    }
+
+    togglePause() {
+        if (this.gameOver) return;
+        this.paused = !this.paused;
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            pauseBtn.textContent = this.paused ? '▶' : '⏸';
+        }
+    }
+
+    resetGame() {
+        this.grid = new Grid(this.rows, this.cols, this.sideLength);
+        this.piece = null;
+        this.dropCounter = 0;
+        this.score = 0;
+        this.gameOver = false;
+        this.paused = false;
+        const scoreEl = document.getElementById('score');
+        if (scoreEl) {
+            scoreEl.innerText = `Счет: ${this.score}`;
+        }
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            pauseBtn.textContent = '⏸';
+        }
+        this.spawnPiece();
     }
 }
