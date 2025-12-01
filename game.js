@@ -9,10 +9,17 @@ export class Game {
         this.width = canvas.width;
         this.height = canvas.height;
 
-        // Grid setup
-        this.sideLength = 40;
-        this.cols = Math.floor(this.width / (this.sideLength / 2)) - 1;
-        this.rows = Math.floor(this.height / (this.sideLength * Math.sqrt(3) / 2));
+        // Grid setup - calculate optimal size to fill canvas proportionally
+        const desiredCols = 23; // Желаемое количество колонок для баланса игры
+        
+        // Calculate sideLength based on canvas width
+        // Formula: width = (cols * sideLength/2) + sideLength/2
+        this.sideLength = (this.width * 2) / (desiredCols + 1);
+        this.cols = desiredCols;
+        
+        // Calculate rows to fill height
+        const triangleHeight = this.sideLength * Math.sqrt(3) / 2;
+        this.rows = Math.floor(this.height / triangleHeight);
 
         this.grid = new Grid(this.rows, this.cols, this.sideLength);
 
