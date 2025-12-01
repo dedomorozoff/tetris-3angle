@@ -15,7 +15,7 @@ function setupResponsiveCanvas(canvas) {
     const vh = window.innerHeight || document.documentElement.clientHeight;
 
     const availableWidth = Math.min(vw, baseWidth);
-    const maxCanvasHeight = Math.max(320, Math.min(baseHeight, vh * 0.8)); // ~80% высоты телефона
+    const maxCanvasHeight = Math.max(320, Math.min(baseHeight, vh * 0.9)); // ~90% высоты телефона
 
     let targetHeight = maxCanvasHeight;
     let targetWidth = Math.round(targetHeight / aspect);
