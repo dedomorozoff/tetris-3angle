@@ -43,7 +43,11 @@ export const SHAPES = {
         color: '#00FF00',
         rotations: [
             // 4 triangles forming a rhombus/hex part
-            [[0, 0], [0, 1], [1, 0], [1, 1]]
+            [[0, 0], [0, 1], [1, 0], [1, 1]],
+            // Rotated 60 degrees
+            [[0, 0], [1, -1], [1, 0], [2, 0]],
+            // Rotated 120 degrees
+            [[0, 0], [0, 1], [1, 1], [1, 2]]
         ]
     }
 };

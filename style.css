@@ -48,9 +48,33 @@ h1 {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-#score {
+#next-piece-container {
     position: absolute;
     top: 8px;
+    right: 8px;
+    background: transparent;
+    padding: 4px;
+    text-align: center;
+    z-index: 2;
+}
+
+#next-piece-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+#next-piece-canvas {
+    display: block;
+    background: transparent;
+    border-radius: 4px;
+}
+
+#score {
+    position: absolute;
+    top: 100px;
     right: 8px;
     font-size: 16px;
     font-weight: 600;

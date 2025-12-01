@@ -17,12 +17,22 @@ export class Game {
         this.grid = new Grid(this.rows, this.cols, this.sideLength);
 
         this.piece = null;
+        this.nextPiece = null;
         this.dropInterval = 1000;
         this.dropCounter = 0;
         this.score = 0;
         this.gameOver = false;
         this.paused = false;
 
+        // Next piece preview canvas
+        this.nextCanvas = document.getElementById('next-piece-canvas');
+        this.nextCtx = this.nextCanvas ? this.nextCanvas.getContext('2d') : null;
+
+        // Bag system for better randomization
+        this.shapeBag = [];
+        this.fillShapeBag();
+
+        this.generateNextPiece();
         this.spawnPiece();
         this.setupInput();
 
@@ -99,16 +109,42 @@ export class Game {
         }
     }
 
-    spawnPiece() {
+    fillShapeBag() {
+        // Add all shapes to the bag
         const shapeKeys = Object.keys(SHAPES);
-        const randomKey = shapeKeys[Math.floor(Math.random() * shapeKeys.length)];
-        const shape = SHAPES[randomKey];
+        this.shapeBag = [...shapeKeys];
+        
+        // Shuffle the bag using Fisher-Yates algorithm
+        for (let i = this.shapeBag.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.shapeBag[i], this.shapeBag[j]] = [this.shapeBag[j], this.shapeBag[i]];
+        }
+    }
+
+    generateNextPiece() {
+        // If bag is empty, refill it
+        if (this.shapeBag.length === 0) {
+            this.fillShapeBag();
+        }
+        
+        // Take the next shape from the bag
+        const shapeKey = this.shapeBag.pop();
+        this.nextPiece = SHAPES[shapeKey];
+    }
+
+    spawnPiece() {
+        // Use the next piece
+        const shape = this.nextPiece;
 
         // Start in middle
         const startCol = Math.floor(this.cols / 2);
         const startRow = 0;
 
         this.piece = new Piece(shape, startRow, startCol);
+
+        // Generate new next piece
+        this.generateNextPiece();
+        this.drawNextPiece();
 
         // Check if spawn is valid
         if (!this.isValidMove(this.piece, 0, 0)) {
@@ -180,6 +216,69 @@ export class Game {
         this.spawnPiece();
     }
 
+    drawNextPiece() {
+        if (!this.nextCtx || !this.nextPiece) return;
+
+        const canvas = this.nextCanvas;
+        const ctx = this.nextCtx;
+
+        // Clear canvas (transparent)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Create a temporary piece for preview
+        const previewPiece = new Piece(this.nextPiece, 0, 0);
+        
+        // Calculate bounds of the shape
+        const cells = previewPiece.getCells();
+        let minRow = Infinity, maxRow = -Infinity;
+        let minCol = Infinity, maxCol = -Infinity;
+        
+        for (const [r, c] of cells) {
+            minRow = Math.min(minRow, r);
+            maxRow = Math.max(maxRow, r);
+            minCol = Math.min(minCol, c);
+            maxCol = Math.max(maxCol, c);
+        }
+
+        // Calculate size and center
+        const shapeWidth = (maxCol - minCol + 1) * (this.sideLength / 2);
+        const shapeHeight = (maxRow - minRow + 1) * (this.sideLength * Math.sqrt(3) / 2);
+        
+        const scale = Math.min(
+            (canvas.width * 0.7) / shapeWidth,
+            (canvas.height * 0.7) / shapeHeight
+        );
+
+        const scaledSide = this.sideLength * scale;
+        const offsetX = (canvas.width - shapeWidth * scale) / 2 - minCol * (scaledSide / 2);
+        const offsetY = (canvas.height - shapeHeight * scale) / 2 - minRow * (scaledSide * Math.sqrt(3) / 2);
+
+        // Draw each triangle
+        for (const [r, c] of cells) {
+            const isUpward = (r + c) % 2 === 0;
+            const x = c * (scaledSide / 2) + offsetX;
+            const y = r * (scaledSide * Math.sqrt(3) / 2) + offsetY;
+
+            ctx.fillStyle = previewPiece.color;
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+
+            ctx.beginPath();
+            if (isUpward) {
+                ctx.moveTo(x, y + scaledSide * Math.sqrt(3) / 2);
+                ctx.lineTo(x + scaledSide / 2, y);
+                ctx.lineTo(x + scaledSide, y + scaledSide * Math.sqrt(3) / 2);
+            } else {
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + scaledSide, y);
+                ctx.lineTo(x + scaledSide / 2, y + scaledSide * Math.sqrt(3) / 2);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+
     draw() {
         // Clear screen
         this.ctx.fillStyle = '#000000';
@@ -214,10 +313,16 @@ export class Game {
     resetGame() {
         this.grid = new Grid(this.rows, this.cols, this.sideLength);
         this.piece = null;
+        this.nextPiece = null;
         this.dropCounter = 0;
         this.score = 0;
         this.gameOver = false;
         this.paused = false;
+        
+        // Reset bag system
+        this.shapeBag = [];
+        this.fillShapeBag();
+        
         const scoreEl = document.getElementById('score');
         if (scoreEl) {
             scoreEl.innerText = `Счет: ${this.score}`;
@@ -226,6 +331,7 @@ export class Game {
         if (pauseBtn) {
             pauseBtn.textContent = '⏸';
         }
+        this.generateNextPiece();
         this.spawnPiece();
     }
 }
