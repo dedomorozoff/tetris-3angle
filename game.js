@@ -17,7 +17,7 @@ export class Game {
         this.sideLength = (this.width * 2) / (desiredCols + 1);
         this.cols = desiredCols;
         
-        // Calculate rows to fill height
+        // Calculate rows to fill height exactly (without cutting off bottom row)
         const triangleHeight = this.sideLength * Math.sqrt(3) / 2;
         this.rows = Math.floor(this.height / triangleHeight);
 
