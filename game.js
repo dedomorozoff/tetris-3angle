@@ -9,6 +9,12 @@ export class Game {
         this.width = canvas.width;
         this.height = canvas.height;
 
+        // Audio setup
+        this.music = new Audio('audio/music.mp3');
+        this.music.loop = true;
+        this.music.volume = 0.5;
+        this.musicEnabled = true;
+
         // Grid setup - calculate optimal size to fill canvas proportionally
         const desiredCols = 23; // Желаемое количество колонок для баланса игры
         
@@ -42,6 +48,7 @@ export class Game {
         this.generateNextPiece();
         this.spawnPiece();
         this.setupInput();
+        this.startMusic();
 
         console.log(`Game initialized: ${this.rows}x${this.cols}`);
     }
@@ -113,6 +120,46 @@ export class Game {
                 e.preventDefault();
                 this.resetGame();
             });
+        }
+
+        // Music toggle button
+        const musicBtn = document.getElementById('music-btn');
+        if (musicBtn) {
+            musicBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                this.toggleMusic();
+            });
+        }
+    }
+
+    startMusic() {
+        // Try to play music, handle autoplay restrictions
+        const playPromise = this.music.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('Autoplay prevented. Music will start on user interaction.');
+                // Add one-time click handler to start music
+                const startOnClick = () => {
+                    if (this.musicEnabled) {
+                        this.music.play();
+                    }
+                    document.removeEventListener('pointerdown', startOnClick);
+                };
+                document.addEventListener('pointerdown', startOnClick);
+            });
+        }
+    }
+
+    toggleMusic() {
+        this.musicEnabled = !this.musicEnabled;
+        const musicBtn = document.getElementById('music-btn');
+        
+        if (this.musicEnabled) {
+            this.music.play();
+            if (musicBtn) musicBtn.textContent = '🔊';
+        } else {
+            this.music.pause();
+            if (musicBtn) musicBtn.textContent = '🔇';
         }
     }
 
@@ -314,6 +361,13 @@ export class Game {
         const pauseBtn = document.getElementById('pause-btn');
         if (pauseBtn) {
             pauseBtn.textContent = this.paused ? '▶' : '⏸';
+        }
+        
+        // Pause/resume music
+        if (this.paused && this.musicEnabled) {
+            this.music.pause();
+        } else if (!this.paused && this.musicEnabled) {
+            this.music.play();
         }
     }
 
