@@ -8,7 +8,7 @@ function setupResponsiveCanvas(canvas) {
     if (!isMobile) return;
 
     const baseWidth = 480;
-    const baseHeight = 640;
+    const baseHeight = 624;
     const aspect = baseHeight / baseWidth;
 
     const vw = window.innerWidth || document.documentElement.clientWidth;
