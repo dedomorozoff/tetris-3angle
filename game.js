@@ -182,7 +182,7 @@ export class Game {
 
     draw() {
         // Clear screen
-        this.ctx.fillStyle = '#000000';
+        this.ctx.fillStyle = '#222';
         this.ctx.fillRect(0, 0, this.width, this.height);
 
         this.grid.draw(this.ctx);

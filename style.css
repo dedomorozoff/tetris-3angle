@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #1a1a1a;
+    background-color: #222;
     color: #ffffff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
@@ -13,7 +13,7 @@ body {
 }
 
 #layout {
-    display: flex;
+    /* display: flex; */
     align-items: flex-start;
     gap: 20px;
     padding: 20px;
