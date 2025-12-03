@@ -80,9 +80,7 @@ h1 {
     font-weight: 600;
     color: #9cff9c;
     text-shadow: 0 0 6px rgba(0, 255, 0, 0.4);
-    background: rgba(0, 0, 0, 0.35);
     padding: 6px 10px;
-    border-radius: 8px;
     text-align: right;
 }
 
@@ -168,7 +166,56 @@ h1 {
     gap: 8px;
 }
 
-@media (max-width: 768px) {
+/* Планшеты в ландшафтной ориентации */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+    body {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    #layout {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    #game-container {
+        max-height: 90vh;
+    }
+
+    canvas {
+        max-height: 85vh;
+        width: auto;
+        height: auto;
+    }
+
+    #touch-controls {
+        position: fixed;
+        right: 15px;
+        bottom: 15px;
+        left: auto;
+        transform: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #touch-controls button {
+        min-width: 64px;
+        min-height: 64px;
+        font-size: 24px;
+    }
+
+    #touch-controls .vertical-buttons {
+        flex-direction: row;
+        gap: 10px;
+    }
+}
+
+/* Планшеты в портретной ориентации и мобильные устройства */
+@media (max-width: 768px), (max-width: 1024px) and (orientation: portrait) {
     body {
         align-items: flex-start;
         height: 100vh;
@@ -199,7 +246,7 @@ h1 {
     }
 
     #ui-panel {
-        display: none; /* убираем боковую панель на мобильных */
+        display: none;
     }
 
     #touch-controls {
@@ -211,8 +258,45 @@ h1 {
     }
 }
 
+/* Планшеты - увеличенные кнопки управления */
+@media (min-width: 481px) and (max-width: 1024px) {
+    #touch-controls button {
+        min-width: 64px;
+        min-height: 64px;
+        font-size: 24px;
+        padding: 14px 18px;
+    }
+
+    #game-buttons button {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    #score {
+        font-size: 18px;
+        padding: 8px 12px;
+    }
+
+    #next-piece-label {
+        font-size: 12px;
+    }
+
+    #next-piece-canvas {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Мобильные телефоны */
 @media (max-width: 480px) {
     #controls {
         font-size: 12px;
+    }
+
+    #touch-controls button {
+        min-width: 56px;
+        min-height: 56px;
+        font-size: 20px;
     }
 }
